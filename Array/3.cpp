@@ -30,20 +30,55 @@
 #include<iostream>
 using namespace std;
 
-int kthSamllestElement(){
-
+void swap(int *a, int *b){
+    int t = *a;
+    *a = *b;
+    *b = t;
 }
 
+int partition(int arr[], int low, int high){
+    int pivot = arr[high];
+    int i = (low-1);
+    for(int j=low; j<=high-1; j++){
+        if(arr[j] < pivot){
+            i++;
+            swap(arr[i], arr[j]);
+        }
+    }
+    swap(arr[++i], arr[high]);
+    return i;
+}
 
-quick
+int kthSamllestElement(int arr[], int low, int high, int k){
+    if(low <= high){
+        int pi = partition(arr, low, high);
+        if(pi == k-1) return arr[pi];
 
+        if(pi > k-1){  // if kth smallest element lies in the left array
+            int l = kthSamllestElement(arr, low, pi-1, k);
+            if(l != -1 ) return l;
+
+        } else { // if kth smallest element liest in the right array
+            int r = kthSamllestElement(arr, pi+1, high, k);
+            if(r != -1) return r;
+        }         
+    }
+    return -1;
+}
+
+void printArray(int arr[], int n){
+    for(int i=0; i<n; i++){
+        cout << arr[i] <<  " ";
+    }
+    cout << "\n";
+}
 int main(){
-    int n;
-    cin >> n;
+    int n, k;
+    cin >> n >> k;
     int arr[n];
     for(int i=0; i<n; i++){
         cin >> arr[i];
     }
-    cout << kthSamllestElement << endl;
+    cout << kthSamllestElement(arr, 0, n-1, k) << endl;
     return 0;
 }
